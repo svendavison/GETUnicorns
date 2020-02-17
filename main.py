@@ -9,7 +9,7 @@ import sys
 file_path = "keep_running.token"
 
 print("Launching at zero....")
-for sleep_tick in range(-4, 0):
+for sleep_tick in range(-2, 0):
     print("Launch in... %s" % sleep_tick)
     time.sleep(1)
 
@@ -34,4 +34,4 @@ while os.path.exists(file_path):
         print("Hitting Endpoint: %s" % x)
         x_result = Worker.fetch_json_endpoint(x)
     print()
-    time.sleep(2)
+    # time.sleep(1)
