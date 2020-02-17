@@ -1,6 +1,12 @@
+from pathlib import Path
+
 import openURL as Worker
-import mysql_worker as MySQLTest
+import mysql_worker as MySQLWorker
 import time
+import os.path
+import sys
+
+file_path = "keep_running.token"
 
 print("Launching at zero....")
 for sleep_tick in range(-4, 0):
@@ -8,17 +14,24 @@ for sleep_tick in range(-4, 0):
     time.sleep(1)
 
 
-# get list of endpoints
-worker_result = MySQLTest.get_full_urls()
+# create token to delete to stop program
+try:
+    Path(file_path).touch()
+except (FileNotFoundError, IOError):
+    print("Unable to create token to keep running. ( %s )" % file_path)
+    sys.exit()
+except Exception as err:
+    print(err)
+    sys.exit()
 
-# hit all endpoints found... a bunch...
-i = 0
-max_loops = 500
-for loop in range(max_loops):
+loop = 0
+# while True:
+while os.path.exists(file_path):
+    loop += 1
+    worker_result = MySQLWorker.get_full_urls()
     print("LOOP: %s" % loop)
     for x in worker_result:
-        i = i + 1
-        print("%s) Result: %s" % (i, x))
+        print("Hitting Endpoint: %s" % x)
         x_result = Worker.fetch_json_endpoint(x)
-    time.sleep(5)
-
+    print()
+    time.sleep(2)
